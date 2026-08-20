@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: lumen-frontend
+    runtime: static
+    buildCommand: echo "Static frontend - no build required"
+    staticPublishPath: .
