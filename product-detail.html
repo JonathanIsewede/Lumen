@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aura Pro Wireless Headphones | LUMEN</title>
+  <link rel="stylesheet" href="static/css/style.css">
+  <link rel="icon" type="image/svg+xml" href="static/favicon.svg">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container nav-wrapper">
+      <a href="index.html" class="brand-logo">
+        <span class="logo-icon">L</span>
+        <span>LUMEN</span>
+      </a>
+
+      <!-- Mobile menu toggle (CSS-only, no JavaScript) -->
+      <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-label="Toggle navigation menu">
+
+      <div class="nav-collapse">
+        <nav>
+          <ul class="nav-links">
+            <li><a href="index.html" class="nav-link">Home</a></li>
+            <li><a href="shop.html" class="nav-link">Shop</a></li>
+            <li><a href="contact.html" class="nav-link">Contact & FAQ</a></li>
+          </ul>
+        </nav>
+      </div>
+
+      <div class="nav-actions">
+        <a href="cart.html" class="cart-icon-btn" title="View Cart" aria-label="View cart">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 7h12l1 13H5L6 7z"/><path d="M9 10V6a3 3 0 0 1 6 0v4"/></svg>
+          <span class="cart-badge" id="nav-cart-badge">2</span>
+        </a>
+        <label for="nav-toggle" class="nav-burger" title="Menu">
+          <span></span><span></span><span></span>
+        </label>
+      </div>
+    </div>
+  </header>
+
+  <!-- Product Detail Section -->
+  <div class="container product-detail-grid">
+    
+    <!-- Gallery Column -->
+    <div class="product-gallery">
+      <div class="main-image-box">
+        <img src="static/images/aura-pro-headphones.svg" alt="Product Image">
+      </div>
+      <div class="gallery-thumbs">
+        <div class="thumb-item active"><img src="static/images/aura-pro-headphones.svg" alt="Thumb 1"></div>
+        <div class="thumb-item"><img src="static/images/chronos-x-smartwatch.svg" alt="Thumb 2"></div>
+        <div class="thumb-item"><img src="static/images/apex-rgb-keyboard.svg" alt="Thumb 3"></div>
+      </div>
+    </div>
+
+    <!-- Product Details Column -->
+    <div class="product-info-col">
+      <span class="product-category">AUDIO</span>
+      <h1>Aura Pro Wireless Headphones</h1>
+
+      <div class="product-rating pdp-rating">
+        ★ 4.9 <span class="rating-count">(342 verified reviews)</span>
+        <span class="stock-status">In stock (45 left)</span>
+      </div>
+
+      <div class="price-tag-lg">
+        $249.99
+        <span class="product-price-old price-old-lg">$299.99</span>
+      </div>
+
+      <p class="pdp-description">
+        Active noise-canceling wireless headphones with 40-hour battery life, spatial audio, and premium memory foam earcups for long-session comfort.
+      </p>
+
+      <!-- Add to Cart Form -->
+      <form onsubmit="event.preventDefault(); addDetailToCart();">
+        <input type="hidden" name="product_id" value="1">
+        
+        <!-- Color Selector -->
+        <div class="variant-picker">
+          <div class="variant-title">Choose Color:</div>
+          <div class="variant-options">
+            <label class="variant-btn selected"><input type="radio" name="color" value="matte-black" checked> Matte Black</label>
+            <label class="variant-btn"><input type="radio" name="color" value="silver-white"> Midnight Silver</label>
+            <label class="variant-btn"><input type="radio" name="color" value="deep-violet"> Deep Violet</label>
+          </div>
+        </div>
+
+        <div class="action-row">
+          <div>
+            <label class="variant-title">Quantity:</label>
+            <input type="number" id="detail-qty" name="quantity" value="1" min="1" max="10" class="qty-input">
+          </div>
+          <div class="action-cell">
+            <button type="submit" class="btn btn-primary btn-full btn-lg">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" aria-hidden="true"><path d="M6 7h12l1 13H5L6 7z"/><path d="M9 10V6a3 3 0 0 1 6 0v4"/></svg>
+              Add to cart
+            </button>
+          </div>
+        </div>
+      </form>
+
+      <!-- Technical Specifications Table -->
+      <div class="pdp-specs">
+        <h3>Technical specifications</h3>
+        <table class="cart-table spec-table">
+          <tr>
+            <td>Driver Size</td>
+            <td>40mm Custom Titanium Drivers</td>
+          </tr>
+          <tr>
+            <td>Frequency Response</td>
+            <td>10Hz - 40,000Hz (Hi-Res Audio Certified)</td>
+          </tr>
+          <tr>
+            <td>Battery Life</td>
+            <td>Up to 40 Hours (ANC On) / Fast Charge 10min = 5 Hours</td>
+          </tr>
+          <tr>
+            <td>Connectivity</td>
+            <td>Bluetooth 5.3 + 3.5mm Aux Line</td>
+          </tr>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Related Products Section -->
+  <section class="section related-section">
+    <div class="container">
+      <h3>You might also like</h3>
+      <div class="product-grid">
+        <div class="product-card">
+          <div class="product-thumb"><img src="static/images/chronos-x-smartwatch.svg" alt="Chronos X Smartwatch"></div>
+          <div class="product-details">
+            <h3 class="product-name">Chronos X Smartwatch</h3>
+            <div class="product-footer">
+              <span class="product-price">$199.99</span>
+              <a href="product-detail.html" class="btn btn-outline btn-sm">View Details</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-thumb"><img src="static/images/apex-rgb-keyboard.svg" alt="Apex RGB Mechanical Keyboard"></div>
+          <div class="product-details">
+            <h3 class="product-name">Apex RGB Mechanical Keyboard</h3>
+            <div class="product-footer">
+              <span class="product-price">$149.99</span>
+              <a href="product-detail.html" class="btn btn-outline btn-sm">View Details</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>&copy; 2026 LUMEN Technologies Inc. All rights reserved.</p>
+        <p>Built with Pure HTML & CSS</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const DEFAULT_ITEMS = [
+      { id: 1, title: 'Aura Pro Wireless Headphones', category: 'AUDIO', price: 249.99, image: 'static/images/aura-pro-headphones.svg', qty: 1 },
+      { id: 2, title: 'Apex RGB Mechanical Keyboard', category: 'ACCESSORIES', price: 149.99, image: 'static/images/apex-rgb-keyboard.svg', qty: 1 }
+    ];
+
+    function updateBadge() {
+      const stored = localStorage.getItem('lumen_cart');
+      const cart = stored ? JSON.parse(stored) : DEFAULT_ITEMS;
+      const count = cart.reduce((sum, item) => sum + item.qty, 0);
+      document.getElementById('nav-cart-badge').textContent = count;
+    }
+
+    function addDetailToCart() {
+      const qtyInput = parseInt(document.getElementById('detail-qty').value) || 1;
+      const stored = localStorage.getItem('lumen_cart');
+      let cart = stored ? JSON.parse(stored) : DEFAULT_ITEMS;
+      
+      const existing = cart.find(item => item.id === 1);
+      if (existing) {
+        existing.qty += qtyInput;
+      } else {
+        cart.push({ id: 1, title: 'Aura Pro Wireless Headphones', category: 'AUDIO', price: 249.99, image: 'static/images/aura-pro-headphones.svg', qty: qtyInput });
+      }
+      
+      localStorage.setItem('lumen_cart', JSON.stringify(cart));
+      updateBadge();
+      window.location.href = 'cart.html';
+    }
+
+    document.addEventListener('DOMContentLoaded', updateBadge);
+  </script>
+
+</body>
+</html>

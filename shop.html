@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shop Hardware Catalog | LUMEN</title>
+  <link rel="stylesheet" href="static/css/style.css">
+  <link rel="icon" type="image/svg+xml" href="static/favicon.svg">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container nav-wrapper">
+      <a href="index.html" class="brand-logo">
+        <span class="logo-icon">L</span>
+        <span>LUMEN</span>
+      </a>
+
+      <!-- Mobile menu toggle (CSS-only, no JavaScript) -->
+      <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-label="Toggle navigation menu">
+
+      <div class="nav-collapse">
+        <nav>
+          <ul class="nav-links">
+            <li><a href="index.html" class="nav-link">Home</a></li>
+            <li><a href="shop.html" class="nav-link active">Shop</a></li>
+            <li><a href="contact.html" class="nav-link">Contact & FAQ</a></li>
+          </ul>
+        </nav>
+
+        <div class="nav-search">
+          <form onsubmit="event.preventDefault(); applyFilter();" class="search-form">
+            <input type="text" id="global-search-input" class="search-input" placeholder="Search products...">
+            <button type="submit" class="search-btn" aria-label="Search">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <div class="nav-actions">
+        <a href="cart.html" class="cart-icon-btn" title="View Cart" aria-label="View cart">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 7h12l1 13H5L6 7z"/><path d="M9 10V6a3 3 0 0 1 6 0v4"/></svg>
+          <span class="cart-badge" id="nav-cart-badge">0</span>
+        </a>
+        <label for="nav-toggle" class="nav-burger" title="Menu">
+          <span></span><span></span><span></span>
+        </label>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Shop Layout -->
+  <div class="container shop-layout">
+    
+    <!-- Sidebar Filter -->
+    <aside class="filter-sidebar">
+      <!-- Retractable filter panel (CSS-only, no JavaScript) -->
+      <input type="checkbox" id="filter-toggle" class="filter-toggle" aria-label="Toggle filters">
+      <label for="filter-toggle" class="filter-toggle-btn">
+        <span class="filter-toggle-label">
+          <span class="filter-chevron" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </span>
+          Filters
+        </span>
+      </label>
+
+      <form onsubmit="event.preventDefault(); applyFilter();" class="filter-panel">
+        <div class="filter-group">
+          <h4 class="filter-title">Categories</h4>
+          <ul class="filter-list">
+            <li class="filter-item">
+              <label><input type="radio" name="category" value="" checked onchange="applyFilter()"> All Products</label>
+            </li>
+            <li class="filter-item">
+              <label><input type="radio" name="category" value="audio" onchange="applyFilter()"> Audio Devices</label>
+            </li>
+            <li class="filter-item">
+              <label><input type="radio" name="category" value="wearables" onchange="applyFilter()"> Wearables</label>
+            </li>
+            <li class="filter-item">
+              <label><input type="radio" name="category" value="accessories" onchange="applyFilter()"> Accessories</label>
+            </li>
+          </ul>
+        </div>
+
+        <div class="filter-group">
+          <h4 class="filter-title">Max Price</h4>
+          <ul class="filter-list">
+            <li class="filter-item">
+              <label><input type="radio" name="max_price" value="999" checked onchange="applyFilter()"> All Prices</label>
+            </li>
+            <li class="filter-item">
+              <label><input type="radio" name="max_price" value="100" onchange="applyFilter()"> Under $100</label>
+            </li>
+            <li class="filter-item">
+              <label><input type="radio" name="max_price" value="200" onchange="applyFilter()"> Under $200</label>
+            </li>
+          </ul>
+        </div>
+
+        <button type="button" onclick="resetFilters()" class="btn btn-secondary btn-full btn-sm">Reset Filters</button>
+      </form>
+    </aside>
+
+    <!-- Product Grid Column -->
+    <main>
+      <div class="shop-results-head">
+        <h2 id="catalog-heading">All products</h2>
+        <span id="catalog-count" class="shop-results-count">Showing 12 products</span>
+      </div>
+
+      <div class="product-grid" id="product-grid-container">
+        <!-- Rendered dynamically -->
+      </div>
+    </main>
+
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>&copy; 2026 LUMEN Technologies Inc. All rights reserved.</p>
+        <p>Built with Pure HTML & CSS</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Instant Search & Dynamic Catalog Filter Script -->
+  <script>
+    const ALL_PRODUCTS = [
+      { id: 1, title: 'Aura Pro Wireless Headphones', category: 'audio', price: 249.99, oldPrice: 299.99, rating: 4.9, reviews: 342, tag: 'BESTSELLER', description: 'Active noise-canceling wireless headphones with 40-hour battery life.', image: 'static/images/aura-pro-headphones.svg' },
+      { id: 2, title: 'Chronos X Smartwatch', category: 'wearables', price: 199.99, oldPrice: 249.99, rating: 4.8, reviews: 215, tag: 'NEW', description: 'AMOLED display smartwatch with cardiac health monitoring and GPS tracking.', image: 'static/images/chronos-x-smartwatch.svg' },
+      { id: 3, title: 'Apex RGB Mechanical Keyboard', category: 'accessories', price: 149.99, oldPrice: 179.99, rating: 4.9, reviews: 188, tag: 'HOT', description: 'Tactile mechanical keyboard with per-key RGB lighting.', image: 'static/images/apex-rgb-keyboard.svg' },
+      { id: 4, title: 'Lumen Soundbar Mini', category: 'audio', price: 119.99, oldPrice: 149.99, rating: 4.7, reviews: 96, tag: 'FEATURED', description: 'Compact room-filling Bluetooth soundbar with deep bass.', image: 'static/images/lumen-soundbar-mini.svg' },
+      { id: 5, title: 'CyberDeck Ergo Mouse', category: 'accessories', price: 79.99, oldPrice: 99.99, rating: 4.6, reviews: 140, tag: 'SALE', description: 'Ergonomic vertical wireless mouse with high-precision optical sensor.', image: 'static/images/cyberdeck-ergo-mouse.svg' },
+      { id: 6, title: 'PulseFit Fitness Band', category: 'wearables', price: 59.99, oldPrice: 79.99, rating: 4.5, reviews: 88, tag: 'POPULAR', description: 'Lightweight waterproof fitness band with sleep & oxygen tracking.', image: 'static/images/pulsefit-fitness-band.svg' },
+      { id: 7, title: 'Nova Pulse True Wireless Earbuds', category: 'audio', price: 129.99, oldPrice: 159.99, rating: 4.7, reviews: 268, tag: 'NEW', description: 'Immersive true wireless earbuds with adaptive noise isolation and wireless charging case.', image: 'static/images/nova-pulse-earbuds.svg' },
+      { id: 8, title: 'Aurora Studio Monitor Headset', category: 'audio', price: 179.99, oldPrice: 219.99, rating: 4.6, reviews: 74, tag: '', description: 'Reference-grade studio headphones with ultra-flat response for creators.', image: 'static/images/aurora-studio-headset.svg' },
+      { id: 9, title: 'EchoPod Bluetooth Speaker', category: 'audio', price: 89.99, oldPrice: 119.99, rating: 4.5, reviews: 152, tag: 'HOT', description: 'Portable 360-degree Bluetooth speaker with 24-hour playtime and IPX7 rating.', image: 'static/images/echopod-speaker.svg' },
+      { id: 10, title: 'Vertex 4K Streaming Webcam', category: 'accessories', price: 99.99, oldPrice: 129.99, rating: 4.6, reviews: 203, tag: 'SALE', description: 'Crisp 4K webcam with auto-framing and dual noise-canceling mics.', image: 'static/images/vertex-4k-webcam.svg' },
+      { id: 11, title: 'TitanTrek 11-in-1 USB-C Dock', category: 'accessories', price: 139.99, oldPrice: '', rating: 4.5, reviews: 66, tag: 'NEW', description: 'Thunderbolt-ready USB-C dock with dual 4K output and 100W power delivery.', image: 'static/images/titantrek-usb-c-dock.svg' },
+      { id: 12, title: 'Chronos Fit Pro Smartwatch', category: 'wearables', price: 159.99, oldPrice: 199.99, rating: 4.7, reviews: 94, tag: 'FEATURED', description: 'Premium sports smartwatch with dual-band GPS and recovery insights.', image: 'static/images/chronos-fit-pro.svg' }
+    ];
+
+    function updateNavBadge() {
+      const stored = localStorage.getItem('lumen_cart');
+      const cart = stored ? JSON.parse(stored) : [
+        { id: 1, qty: 1 }, { id: 2, qty: 1 }
+      ];
+      const count = cart.reduce((sum, item) => sum + (item.qty || 1), 0);
+      document.getElementById('nav-cart-badge').textContent = count;
+    }
+
+    function addToCart(id, title, price, category, image) {
+      const stored = localStorage.getItem('lumen_cart');
+      let cart = stored ? JSON.parse(stored) : [];
+      const existing = cart.find(item => item.id === id);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        cart.push({ id, title, price, category, image, qty: 1 });
+      }
+      localStorage.setItem('lumen_cart', JSON.stringify(cart));
+      updateNavBadge();
+      window.location.href = 'cart.html';
+    }
+
+    function applyFilter() {
+      const searchVal = document.getElementById('global-search-input').value.trim().toLowerCase();
+      
+      const selectedCategoryElem = document.querySelector('input[name="category"]:checked');
+      const categoryVal = selectedCategoryElem ? selectedCategoryElem.value.toLowerCase() : '';
+      
+      const maxPriceElem = document.querySelector('input[name="max_price"]:checked');
+      const maxPriceVal = maxPriceElem ? parseFloat(maxPriceElem.value) : 999;
+
+      const filtered = ALL_PRODUCTS.filter(p => {
+        const matchesSearch = !searchVal || 
+          p.title.toLowerCase().includes(searchVal) || 
+          p.description.toLowerCase().includes(searchVal) || 
+          p.category.toLowerCase().includes(searchVal);
+          
+        const matchesCategory = !categoryVal || p.category.toLowerCase() === categoryVal;
+        const matchesPrice = p.price <= maxPriceVal;
+
+        return matchesSearch && matchesCategory && matchesPrice;
+      });
+
+      renderProducts(filtered, searchVal, categoryVal);
+    }
+
+    function resetFilters() {
+      document.getElementById('global-search-input').value = '';
+      const allCategoryRadio = document.querySelector('input[name="category"][value=""]');
+      if (allCategoryRadio) allCategoryRadio.checked = true;
+      const allPriceRadio = document.querySelector('input[name="max_price"][value="999"]');
+      if (allPriceRadio) allPriceRadio.checked = true;
+      applyFilter();
+    }
+
+    function renderProducts(products, searchVal, categoryVal) {
+      const grid = document.getElementById('product-grid-container');
+      const heading = document.getElementById('catalog-heading');
+      const count = document.getElementById('catalog-count');
+
+      count.textContent = `Showing ${products.length} products`;
+
+      if (searchVal) {
+        heading.textContent = `Results for "${searchVal}"`;
+      } else if (categoryVal) {
+        heading.textContent = `${categoryVal} products`;
+      } else {
+        heading.textContent = 'All products';
+      }
+
+      if (products.length === 0) {
+        grid.innerHTML = `
+          <div class="summary-card cart-empty">
+            <div class="cart-empty-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+            </div>
+            <h3>No products found</h3>
+            <p>Try a different search or clear the category filter.</p>
+            <button onclick="resetFilters()" class="btn btn-primary">Reset filters</button>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = products.map(p => `
+        <div class="product-card">
+          <div class="product-thumb">
+            ${p.tag ? `<span class="product-tag">${p.tag}</span>` : ''}
+            <a href="product-detail.html"><img src="${p.image}" alt="${p.title}"></a>
+          </div>
+          <div class="product-details">
+            <span class="product-category">${p.category}</span>
+            <h3 class="product-name"><a href="product-detail.html">${p.title}</a></h3>
+            <div class="product-rating">★ ${p.rating} <span class="rating-count">(${p.reviews} reviews)</span></div>
+            <div class="product-footer">
+              <div>
+                <span class="product-price">$${p.price.toFixed(2)}</span>
+                ${p.oldPrice ? `<span class="product-price-old">$${p.oldPrice.toFixed(2)}</span>` : ''}
+              </div>
+              <button onclick="addToCart(${p.id}, '${p.title}', ${p.price}, '${p.category}', '${p.image}')" class="btn btn-primary btn-sm">+ Add</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      updateNavBadge();
+
+      // Read URL parameters e.g. shop.html?search=headphones or shop.html?category=audio
+      const params = new URLSearchParams(window.location.search);
+      const searchParam = params.get('search');
+      const categoryParam = params.get('category');
+
+      if (searchParam) {
+        document.getElementById('global-search-input').value = searchParam;
+      }
+      if (categoryParam) {
+        const catRadio = document.querySelector(`input[name="category"][value="${categoryParam}"]`);
+        if (catRadio) catRadio.checked = true;
+      }
+
+      // Add instant search typelistener
+      const searchInput = document.getElementById('global-search-input');
+      if (searchInput) {
+        searchInput.addEventListener('input', applyFilter);
+      }
+
+      applyFilter();
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout | LUMEN</title>
+  <link rel="stylesheet" href="static/css/style.css">
+  <link rel="icon" type="image/svg+xml" href="static/favicon.svg">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container nav-wrapper">
+      <a href="index.html" class="brand-logo">
+        <span class="logo-icon">L</span>
+        <span>LUMEN</span>
+      </a>
+      <span class="checkout-secure">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+        Secure checkout · encrypted connection
+      </span>
+    </div>
+  </header>
+
+  <!-- Checkout Layout -->
+  <div class="container checkout-grid">
+    
+    <!-- Shipping & Payment Form -->
+    <div>
+      <form action="order-success.html" method="GET" onsubmit="clearCartOnOrder()">
+        
+        <h2 class="checkout-step">1. Shipping information</h2>
+        
+        <div class="form-group">
+          <label class="form-label">Full Name *</label>
+          <input type="text" name="full_name" required placeholder="Alex Mercer" class="form-control">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Email Address *</label>
+          <input type="email" name="email" required placeholder="alex.mercer@example.com" class="form-control">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Street Address *</label>
+          <input type="text" name="address" required placeholder="104 Innovation Parkway, Suite 400" class="form-control">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">City *</label>
+            <input type="text" name="city" required placeholder="San Francisco" class="form-control">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Postal / ZIP Code *</label>
+            <input type="text" name="zip_code" required placeholder="94107" class="form-control">
+          </div>
+        </div>
+
+        <h2 class="checkout-step">2. Payment method</h2>
+
+        <div class="payment-list">
+          <label class="variant-btn selected payment-option">
+            <input type="radio" name="payment_method" value="Credit Card" checked>
+            <div>
+              <div class="payment-option-title">Credit / Debit Card</div>
+              <div class="payment-option-sub">Visa, MasterCard, American Express</div>
+            </div>
+          </label>
+
+          <label class="variant-btn payment-option">
+            <input type="radio" name="payment_method" value="PayPal">
+            <div>
+              <div class="payment-option-title">PayPal</div>
+              <div class="payment-option-sub">Pay with your PayPal balance</div>
+            </div>
+          </label>
+
+          <label class="variant-btn payment-option">
+            <input type="radio" name="payment_method" value="Cash on Delivery">
+            <div>
+              <div class="payment-option-title">Cash on Delivery</div>
+              <div class="payment-option-sub">Pay when the package arrives</div>
+            </div>
+          </label>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-full btn-lg">Complete order & pay</button>
+      </form>
+    </div>
+
+    <!-- Mini Order Summary Sidebar -->
+    <div>
+      <div class="summary-card">
+        <h3 class="summary-title">Order review</h3>
+
+        <div id="checkout-items-list" class="review-list">
+          <!-- Dynamically populated -->
+        </div>
+
+        <div class="summary-row">
+          <span>Subtotal</span>
+          <span id="checkout-subtotal">$0.00</span>
+        </div>
+        <div class="summary-row">
+          <span>Express Shipping</span>
+          <span id="checkout-shipping">$0.00</span>
+        </div>
+        <div class="summary-row">
+          <span>Estimated Tax (8%)</span>
+          <span id="checkout-tax">$0.00</span>
+        </div>
+
+        <div class="summary-row total">
+          <span>Total due</span>
+          <span id="checkout-total">$0.00</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>&copy; 2026 LUMEN Technologies Inc. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const DEFAULT_ITEMS = [
+      { id: 1, title: 'Aura Pro Wireless Headphones', category: 'AUDIO', price: 249.99, image: 'static/images/aura-pro-headphones.svg', qty: 1 },
+      { id: 2, title: 'Apex RGB Mechanical Keyboard', category: 'ACCESSORIES', price: 149.99, image: 'static/images/apex-rgb-keyboard.svg', qty: 1 }
+    ];
+
+    function renderCheckout() {
+      const stored = localStorage.getItem('lumen_cart');
+      const cart = stored ? JSON.parse(stored) : DEFAULT_ITEMS;
+      const listContainer = document.getElementById('checkout-items-list');
+
+      let subtotal = 0;
+      let html = '';
+
+      cart.forEach(item => {
+        const itemTotal = item.price * item.qty;
+        subtotal += itemTotal;
+        html += `
+          <div class="review-item">
+            <div>
+              <div class="review-item-name">${item.title}</div>
+              <span class="review-item-sub">${item.qty}x @ $${item.price.toFixed(2)}</span>
+            </div>
+            <span class="review-item-price">$${itemTotal.toFixed(2)}</span>
+          </div>
+        `;
+      });
+
+      listContainer.innerHTML = html || '<div class="review-item-name">No items in cart</div>';
+
+      const shipping = subtotal > 0 ? 15.00 : 0.00;
+      const tax = subtotal * 0.08;
+      const grandTotal = subtotal + shipping + tax;
+
+      document.getElementById('checkout-subtotal').textContent = `$${subtotal.toFixed(2)}`;
+      document.getElementById('checkout-shipping').textContent = `$${shipping.toFixed(2)}`;
+      document.getElementById('checkout-tax').textContent = `$${tax.toFixed(2)}`;
+      document.getElementById('checkout-total').textContent = `$${grandTotal.toFixed(2)}`;
+    }
+
+    function clearCartOnOrder() {
+      localStorage.setItem('lumen_cart', JSON.stringify([]));
+    }
+
+    document.addEventListener('DOMContentLoaded', renderCheckout);
+  </script>
+
+</body>
+</html>

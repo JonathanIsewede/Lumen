@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shopping Cart | LUMEN</title>
+  <link rel="stylesheet" href="static/css/style.css">
+  <link rel="icon" type="image/svg+xml" href="static/favicon.svg">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container nav-wrapper">
+      <a href="index.html" class="brand-logo">
+        <span class="logo-icon">L</span>
+        <span>LUMEN</span>
+      </a>
+
+      <!-- Mobile menu toggle (CSS-only, no JavaScript) -->
+      <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-label="Toggle navigation menu">
+
+      <div class="nav-collapse">
+        <nav>
+          <ul class="nav-links">
+            <li><a href="index.html" class="nav-link">Home</a></li>
+            <li><a href="shop.html" class="nav-link">Shop</a></li>
+            <li><a href="contact.html" class="nav-link">Contact & FAQ</a></li>
+          </ul>
+        </nav>
+      </div>
+
+      <div class="nav-actions">
+        <a href="cart.html" class="cart-icon-btn active" title="View Cart" aria-label="View cart">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 7h12l1 13H5L6 7z"/><path d="M9 10V6a3 3 0 0 1 6 0v4"/></svg>
+          <span class="cart-badge" id="nav-cart-badge">0</span>
+        </a>
+        <label for="nav-toggle" class="nav-burger" title="Menu">
+          <span></span><span></span><span></span>
+        </label>
+      </div>
+    </div>
+  </header>
+
+  <!-- Cart Section -->
+  <div class="container cart-grid">
+    
+    <!-- Cart Items Column -->
+    <div>
+      <div class="cart-head">
+        <h2>Your shopping bag</h2>
+        <button onclick="clearCart()" class="btn btn-danger-outline btn-sm">Clear all items</button>
+      </div>
+
+      <div id="cart-content">
+        <!-- Rendered dynamically via script -->
+      </div>
+
+      <div class="cart-foot">
+        <a href="shop.html" class="btn btn-secondary">&larr; Continue shopping</a>
+      </div>
+    </div>
+
+    <!-- Summary Sidebar -->
+    <div>
+      <div class="summary-card">
+        <h3 class="summary-title">Order summary</h3>
+        
+        <div class="summary-row">
+          <span>Subtotal</span>
+          <span id="summary-subtotal">$0.00</span>
+        </div>
+        <div class="summary-row">
+          <span>Express Shipping</span>
+          <span id="summary-shipping">$0.00</span>
+        </div>
+        <div class="summary-row">
+          <span>Estimated Tax (8%)</span>
+          <span id="summary-tax">$0.00</span>
+        </div>
+
+        <div class="summary-row total">
+          <span>Grand Total</span>
+          <span id="summary-total">$0.00</span>
+        </div>
+
+        <!-- Promo Code Input -->
+        <div class="promo-wrap">
+          <form onsubmit="event.preventDefault(); applyPromo();" class="search-form">
+            <input type="text" id="promo-input" placeholder="Promo code (e.g. LUMEN10)" class="search-input">
+            <button type="submit" class="btn btn-secondary btn-sm">Apply</button>
+          </form>
+          <div id="promo-msg" class="promo-msg"></div>
+        </div>
+
+        <a href="checkout.html" id="checkout-btn" class="btn btn-primary btn-full">Proceed to Checkout &rarr;</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>&copy; 2026 LUMEN Technologies Inc. All rights reserved.</p>
+        <p>Built with Pure HTML & CSS</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Interactive Cart Management Script -->
+  <script>
+    const DEFAULT_ITEMS = [
+      { id: 1, title: 'Aura Pro Wireless Headphones', category: 'AUDIO', price: 249.99, image: 'static/images/aura-pro-headphones.svg', qty: 1 },
+      { id: 2, title: 'Apex RGB Mechanical Keyboard', category: 'ACCESSORIES', price: 149.99, image: 'static/images/apex-rgb-keyboard.svg', qty: 1 }
+    ];
+
+    function getCart() {
+      const stored = localStorage.getItem('lumen_cart');
+      if (!stored) {
+        localStorage.setItem('lumen_cart', JSON.stringify(DEFAULT_ITEMS));
+        return DEFAULT_ITEMS;
+      }
+      return JSON.parse(stored);
+    }
+
+    function saveCart(cart) {
+      localStorage.setItem('lumen_cart', JSON.stringify(cart));
+      renderCart();
+    }
+
+    function removeItem(id) {
+      let cart = getCart();
+      cart = cart.filter(item => item.id !== id);
+      saveCart(cart);
+    }
+
+    function updateQty(id, newQty) {
+      let cart = getCart();
+      const qty = parseInt(newQty);
+      if (qty <= 0) {
+        removeItem(id);
+        return;
+      }
+      const item = cart.find(i => i.id === id);
+      if (item) {
+        item.qty = qty;
+      }
+      saveCart(cart);
+    }
+
+    function clearCart() {
+      saveCart([]);
+    }
+
+    let discountPercent = 0;
+    function applyPromo() {
+      const code = document.getElementById('promo-input').value.trim().toUpperCase();
+      const msg = document.getElementById('promo-msg');
+      if (code === 'LUMEN10') {
+        discountPercent = 0.10;
+        msg.textContent = '✓ 10% discount applied';
+        msg.className = 'promo-msg success';
+      } else if (code === 'LUMEN20') {
+        discountPercent = 0.20;
+        msg.textContent = '✓ 20% discount applied';
+        msg.className = 'promo-msg success';
+      } else {
+        msg.textContent = '✕ Invalid promo code';
+        msg.className = 'promo-msg error';
+      }
+      renderCart();
+    }
+
+    function renderCart() {
+      const cart = getCart();
+      const container = document.getElementById('cart-content');
+      const badge = document.getElementById('nav-cart-badge');
+
+      const totalItemsCount = cart.reduce((sum, item) => sum + item.qty, 0);
+      badge.textContent = totalItemsCount;
+
+      if (cart.length === 0) {
+        container.innerHTML = `
+          <div class="summary-card cart-empty">
+            <div class="cart-empty-icon" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7h12l1 13H5L6 7z"/><path d="M9 10V6a3 3 0 0 1 6 0v4"/></svg>
+            </div>
+            <h3>Your shopping bag is empty</h3>
+            <p>Nothing in the bag yet — the catalog is waiting.</p>
+            <a href="shop.html" class="btn btn-primary">Shop the catalog &rarr;</a>
+          </div>
+        `;
+        document.getElementById('summary-subtotal').textContent = '$0.00';
+        document.getElementById('summary-shipping').textContent = '$0.00';
+        document.getElementById('summary-tax').textContent = '$0.00';
+        document.getElementById('summary-total').textContent = '$0.00';
+        document.getElementById('checkout-btn').classList.add('btn-secondary', 'is-disabled');
+        return;
+      }
+
+      document.getElementById('checkout-btn').classList.remove('btn-secondary', 'is-disabled');
+
+      let subtotal = 0;
+      let rowsHtml = '';
+
+      cart.forEach(item => {
+        const itemTotal = item.price * item.qty;
+        subtotal += itemTotal;
+        rowsHtml += `
+          <tr>
+            <td data-label="">
+              <div class="cart-product-cell">
+                <img src="${item.image}" alt="${item.title}" class="cart-item-img">
+                <div>
+                  <div class="cart-item-title">${item.title}</div>
+                  <span class="cart-item-sub">${item.category || 'HARDWARE'}</span>
+                </div>
+              </div>
+            </td>
+            <td data-label="Price">$${item.price.toFixed(2)}</td>
+            <td data-label="Quantity">
+              <input type="number" value="${item.qty}" min="1" max="10" class="qty-input qty-input-sm" onchange="updateQty(${item.id}, this.value)" aria-label="Quantity for ${item.title}">
+            </td>
+            <td data-label="Total" class="cart-total-cell">$${itemTotal.toFixed(2)}</td>
+            <td data-label="">
+              <button onclick="removeItem(${item.id})" class="btn btn-danger-outline btn-sm">Remove</button>
+            </td>
+          </tr>
+        `;
+      });
+
+      container.innerHTML = `
+        <table class="cart-table responsive-table">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Price</th>
+              <th>Quantity</th>
+              <th>Total</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rowsHtml}
+          </tbody>
+        </table>
+      `;
+
+      const discount = subtotal * discountPercent;
+      const discountedSubtotal = subtotal - discount;
+      const shipping = subtotal > 0 ? 15.00 : 0.00;
+      const tax = discountedSubtotal * 0.08;
+      const grandTotal = discountedSubtotal + shipping + tax;
+
+      document.getElementById('summary-subtotal').textContent = `$${subtotal.toFixed(2)}`;
+      document.getElementById('summary-shipping').textContent = `$${shipping.toFixed(2)}`;
+      document.getElementById('summary-tax').textContent = `$${tax.toFixed(2)}`;
+      document.getElementById('summary-total').textContent = `$${grandTotal.toFixed(2)}`;
+    }
+
+    // Initialize cart on page load
+    document.addEventListener('DOMContentLoaded', renderCart);
+  </script>
+
+</body>
+</html>
