@@ -28,7 +28,8 @@
     
     <!-- Shipping & Payment Form -->
     <div>
-      <form action="order-success.html" method="GET" onsubmit="clearCartOnOrder()">
+      <form action="https://backend-1-oiy3.onrender.com/checkout" method="POST" onsubmit="prepareBackendCheckout()">
+        <input type="hidden" name="cart" id="backend-cart-payload">
         
         <h2 class="checkout-step">1. Shipping information</h2>
         
@@ -170,7 +171,10 @@
       document.getElementById('checkout-total').textContent = `$${grandTotal.toFixed(2)}`;
     }
 
-    function clearCartOnOrder() {
+    function prepareBackendCheckout() {
+      const stored = localStorage.getItem('lumen_cart');
+      const cart = stored ? JSON.parse(stored) : DEFAULT_ITEMS;
+      document.getElementById('backend-cart-payload').value = JSON.stringify(cart);
       localStorage.setItem('lumen_cart', JSON.stringify([]));
     }
 
