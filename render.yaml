@@ -4,3 +4,12 @@ services:
     runtime: static
     buildCommand: echo "Static frontend - no build required"
     staticPublishPath: .
+    routes:
+      - type: redirect
+        source: /admin
+        destination: https://backend-1-oiy3.onrender.com/admin/login
+        status: 302
+      - type: redirect
+        source: /admin/*
+        destination: https://backend-1-oiy3.onrender.com/admin/login
+        status: 302
